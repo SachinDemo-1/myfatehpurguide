@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 
@@ -20,7 +20,7 @@ export default function RegisterPage() {
     if (form.password.length < 6) { toast.error('Password must be at least 6 characters'); return; }
     setLoading(true);
     try {
-      const res = await axios.post('/api/auth/register', { name:form.name, email:form.email, phone:form.phone, nationality:form.nationality, password:form.password });
+      const res = await api.post('/api/auth/register', { name:form.name, email:form.email, phone:form.phone, nationality:form.nationality, password:form.password });
       login(res.data.token, res.data.user);
       toast.success(`Welcome, ${res.data.user.name}!`);
       navigate('/');

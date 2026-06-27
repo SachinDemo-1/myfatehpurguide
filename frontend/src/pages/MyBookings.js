@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import toast from 'react-hot-toast';
 
 const STATUS_COLORS = { Pending:{bg:'#FFF8E1',color:'#F57F17',dot:'#FFC107'}, Confirmed:{bg:'#E0F4F4',color:'var(--teal)',dot:'var(--teal-light)'}, Completed:{bg:'#E8F5E9',color:'#2E7D32',dot:'#4CAF50'}, Cancelled:{bg:'#FDECEA',color:'#C62828',dot:'#EF5350'} };
@@ -14,14 +14,14 @@ export default function MyBookings() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    axios.get('/api/bookings/my').then(r=>setBookings(r.data.bookings)).catch(()=>toast.error('Failed to load bookings')).finally(()=>setLoading(false));
+    api.get('/api/bookings/my').then(r=>setBookings(r.data.bookings)).catch(()=>toast.error('Failed to load bookings')).finally(()=>setLoading(false));
   }, []);
 
   const submitReview = async (booking) => {
     if (!review.comment.trim()) { toast.error('Please write a review comment'); return; }
     setSubmitting(true);
     try {
-      await axios.post('/api/reviews', { rating:review.rating, comment:review.comment, tourType:booking.tourType, bookingId:booking.id });
+      await api.post('/api/reviews', { rating:review.rating, comment:review.comment, tourType:booking.tourType, bookingId:booking.id });
       toast.success('Review submitted! Thank you 🙏');
       setShowReview(null); setReview({ rating:5, comment:'' });
     } catch(err) { toast.error(err.response?.data?.error || 'Failed to submit review'); }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 
@@ -27,8 +27,8 @@ export default function OwnerDashboard() {
   const fetchAll = useCallback(async () => {
     try {
       const [bRes, rRes] = await Promise.all([
-        axios.get('/api/bookings', hdr()),
-        axios.get('/api/reviews/all', hdr()),
+        api.get('/api/bookings', hdr()),
+        api.get('/api/reviews/all', hdr()),
       ]);
       setBookings(bRes.data.bookings);
       setReviews(rRes.data.reviews);
@@ -39,25 +39,25 @@ export default function OwnerDashboard() {
   useEffect(() => { fetchAll(); }, [fetchAll]);
 
   const confirm = async id => {
-    try { await axios.patch(`/api/bookings/${id}/confirm`, {}, hdr()); toast.success('Confirmed! User notified.'); fetchAll(); if(selected?.id===id) setSelected(p=>({...p,status:'Confirmed',ownerConfirmed:true})); }
+    try { await api.patch(`/api/bookings/${id}/confirm`, {}, hdr()); toast.success('Confirmed! User notified.'); fetchAll(); if(selected?.id===id) setSelected(p=>({...p,status:'Confirmed',ownerConfirmed:true})); }
     catch { toast.error('Failed'); }
   };
   const complete = async id => {
-    try { await axios.patch(`/api/bookings/${id}/complete`, {}, hdr()); toast.success('Completed! User notified.'); fetchAll(); if(selected?.id===id) setSelected(p=>({...p,status:'Completed'})); }
+    try { await api.patch(`/api/bookings/${id}/complete`, {}, hdr()); toast.success('Completed! User notified.'); fetchAll(); if(selected?.id===id) setSelected(p=>({...p,status:'Completed'})); }
     catch { toast.error('Failed'); }
   };
   const del = async id => {
     if(!window.confirm('Delete this booking?')) return;
-    try { await axios.delete(`/api/bookings/${id}`, hdr()); setBookings(bs=>bs.filter(b=>b.id!==id)); if(selected?.id===id){setSelected(null);setMobileDetail(false);} toast.success('Deleted'); }
+    try { await api.delete(`/api/bookings/${id}`, hdr()); setBookings(bs=>bs.filter(b=>b.id!==id)); if(selected?.id===id){setSelected(null);setMobileDetail(false);} toast.success('Deleted'); }
     catch { toast.error('Failed'); }
   };
   const savePayment = async () => {
-    try { await axios.patch(`/api/bookings/${payModal.id}/payment`, {...payForm, amount:parseFloat(payForm.amount)||0}, hdr()); toast.success('Payment saved!'); setPayModal(null); fetchAll(); }
+    try { await api.patch(`/api/bookings/${payModal.id}/payment`, {...payForm, amount:parseFloat(payForm.amount)||0}, hdr()); toast.success('Payment saved!'); setPayModal(null); fetchAll(); }
     catch { toast.error('Failed to save payment'); }
   };
   const deleteReview = async id => {
     if(!window.confirm('Delete this review?')) return;
-    try { await axios.delete(`/api/reviews/${id}`, hdr()); setReviews(rs=>rs.filter(r=>r.id!==id)); toast.success('Deleted'); }
+    try { await api.delete(`/api/reviews/${id}`, hdr()); setReviews(rs=>rs.filter(r=>r.id!==id)); toast.success('Deleted'); }
     catch { toast.error('Failed'); }
   };
 

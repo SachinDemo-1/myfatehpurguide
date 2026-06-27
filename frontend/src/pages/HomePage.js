@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 
 /* ── scroll-reveal hook ── */
 const useReveal = (delay = 0) => {
@@ -129,7 +129,7 @@ export default function HomePage() {
   const nextImg = useCallback(() => setLightbox(l => ({ ...l, index:(l.index+1)%GUIDE_GALLERY.length })), []);
 
   useEffect(() => {
-    axios.get('/api/reviews').then(r => { setReviews(r.data.reviews); setAvgRating(r.data.avgRating); }).catch(()=>{});
+    api.get('/api/reviews').then(r => { setReviews(r.data.reviews); setAvgRating(r.data.avgRating); }).catch(()=>{});
     const t = setInterval(() => setActiveSikri(g=>(g+1)%SIKRI_PHOTOS.length), 4200);
     return () => clearInterval(t);
   }, []);

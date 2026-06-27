@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 
@@ -35,7 +35,7 @@ export default function BookingPage() {
   const handleSubmit = async e => {
     e.preventDefault(); setLoading(true);
     try {
-      const res = await axios.post('/api/bookings', form);
+      const res = await api.post('/api/bookings', form);
       toast.success('Booking submitted! Awaiting confirmation.');
       navigate('/booking-success', { state:{ booking:res.data.booking } });
     } catch(err) { toast.error(err.response?.data?.error || 'Booking failed'); }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 
@@ -14,7 +14,7 @@ export default function OwnerLogin() {
   const handleSubmit = async e => {
     e.preventDefault(); setLoading(true);
     try {
-      const res = await axios.post('/api/auth/owner-login', form);
+      const res = await api.post('/api/auth/owner-login', form);
       login(res.data.token, { name:res.data.name, role:'owner' });
       toast.success(`Welcome, ${res.data.name}!`);
       navigate('/owner/dashboard');

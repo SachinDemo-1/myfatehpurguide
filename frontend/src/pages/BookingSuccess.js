@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-
+import api from '../api';
 export default function BookingSuccess() {
   const { state } = useLocation();
   const booking = state?.booking;

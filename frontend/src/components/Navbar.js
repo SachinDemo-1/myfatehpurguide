@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import api from '../api';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -32,7 +32,7 @@ export default function Navbar() {
 
   useEffect(() => {
     if (isLoggedIn && user?.role !== 'owner') {
-      const fetch = () => axios.get('/api/notifications').then(r => {
+      const fetch = () => api.get('/api/notifications').then(r => {
         setUnread(r.data.unread); setNotifs(r.data.notifications.slice(0,5));
       }).catch(() => {});
       fetch();
@@ -44,7 +44,7 @@ export default function Navbar() {
   const openNotif = () => {
     setNotifOpen(o => !o);
     if (unread > 0) {
-      axios.patch('/api/notifications/read-all').then(() => setUnread(0)).catch(() => {});
+      api.patch('/api/notifications/read-all').then(() => setUnread(0)).catch(() => {});
     }
   };
 

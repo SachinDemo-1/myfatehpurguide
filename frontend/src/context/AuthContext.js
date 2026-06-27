@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 
 const AuthContext = createContext(null);
 
@@ -13,17 +13,17 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('fs_token', tok);
     localStorage.setItem('fs_user', JSON.stringify(userData));
     setToken(tok); setUser(userData);
-    axios.defaults.headers.common['Authorization'] = `Bearer ${tok}`;
+    api.defaults.headers.common['Authorization'] = `Bearer ${tok}`;
   };
 
   const logout = () => {
     localStorage.removeItem('fs_token'); localStorage.removeItem('fs_user');
     setToken(null); setUser(null);
-    delete axios.defaults.headers.common['Authorization'];
+    delete api.defaults.headers.common['Authorization'];
   };
 
   useEffect(() => {
-    if (token) axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    if (token) api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   }, [token]);
 
   return (
